@@ -47,4 +47,33 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function airlines()
+    {
+        return $this->hasMany(Airline::class, 'manage_by_user_id');
+    }
+
+    public function bookings() 
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    public function bookingHistories() {
+        return $this->hasMany(BookingHistory::class);
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isMaskapai()
+    {
+        return $this->role === 'maskapai';
+    }
+
+    public function isUser()
+    {
+        return $this->role === 'user';
+    }
 }
