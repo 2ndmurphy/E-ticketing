@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Controllers\Airline\FlightController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\MaskapaiController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\User\AdminController;
+use App\Http\Controllers\User\MaskapaiController;
+use App\Http\Controllers\User\UserController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -11,9 +12,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -22,15 +23,22 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-});
+    // Admin Only
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    });
 
-Route::middleware(['auth', 'role:maskapai'])->group(function () {
-    Route::get('/maskapai/dashboard', [MaskapaiController::class, 'index'])->name('maskapai.dashboard');
-});
+    // Maskapai Only
+    Route::middleware(['role:maskapai'])->prefix('maskapai')->name('maskapai.')->group(function () {
+        Route::get('/dashboard', [MaskapaiController::class, 'index'])->name('maskapai.dashboard');
 
-Route::middleware(['auth', 'role:user'])->group(function () {
-    Route::get('/user/dashboard', [UserController::class, 'index'])->name('user.dashboard');
+        Route::resource('flights', FlightController::class);
+    });
+
+    // User Only
+    Route::middleware(['role:user'])->group(function () {
+        Route::get('/user/dashboard', [UserController::class, 'index'])->name('user.dashboard');
+    });
 });
 
 require __DIR__.'/auth.php';
