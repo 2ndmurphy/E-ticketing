@@ -45,6 +45,8 @@ class AuthenticatedSessionController extends Controller
                 break;
         }
 
+        flash()->use('theme.neon')->success('Login berhasil');
+
         return redirect()->intended($redirect);
     }
 
