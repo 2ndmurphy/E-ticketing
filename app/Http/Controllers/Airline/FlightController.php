@@ -73,11 +73,13 @@ class FlightController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified flight.
      */
     public function show(Flight $flight)
     {
+        $flight->load('departureAirport', 'arrivalAirport', 'seatAvailability');
 
+        // return view('airline.flights.show', compact('flight'));
     }
 
     /**

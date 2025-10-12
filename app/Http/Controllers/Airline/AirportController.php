@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class AirportController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the airports.
      */
     public function index()
     {
@@ -17,7 +17,7 @@ class AirportController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new airports.
      */
     public function create()
     {
@@ -25,7 +25,7 @@ class AirportController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created airports in storage.
      */
     public function store(Request $request)
     {
@@ -33,7 +33,7 @@ class AirportController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified airports.
      */
     public function show(Airport $airport)
     {
@@ -41,7 +41,7 @@ class AirportController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified airports.
      */
     public function edit(Airport $airport)
     {
@@ -49,7 +49,7 @@ class AirportController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified airports in storage.
      */
     public function update(Request $request, Airport $airport)
     {
@@ -57,7 +57,7 @@ class AirportController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified airports from storage.
      */
     public function destroy(Airport $airport)
     {

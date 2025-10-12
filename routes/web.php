@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\Airline\FlightController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Airline\BookingController;
+use App\Http\Controllers\Airline\ProfileController;
 use App\Http\Controllers\User\AdminController;
 use App\Http\Controllers\User\MaskapaiController;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Airline\PassangerController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +35,17 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/dashboard', [MaskapaiController::class, 'index'])->name('maskapai.dashboard');
 
         Route::resource('flights', FlightController::class);
+
+        Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+        Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
+        Route::post('/bookings/{booking}/update-status', [BookingController::class, 'updateStatus'])->name('bookings.update-status');
+
+        Route::get('/passengers', [PassangerController::class, 'index'])->name('passengers.index');
+        Route::get('/passengers/export/{flightId}', [PassangerController::class, 'export'])->name('passengers.export');
+
+        Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+        Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     });
 
     // User Only
@@ -41,4 +54,4 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
