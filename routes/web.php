@@ -49,8 +49,17 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     });
 
     // User Only
-    Route::middleware(['role:user'])->group(function () {
-        Route::get('/user/dashboard', [UserController::class, 'index'])->name('user.dashboard');
+    Route::middleware(['role:user'])->prefix('user')->name('user.')->group(function () {
+        Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
+
+        Route::get('/flights', [FlightController::class, 'index'])->name('flights.index');
+        Route::get('/flights/{id}', [FlightController::class, 'show'])->name('flights.show');
+
+        Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+        Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
+        Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+        Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
+        Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
     });
 });
 
