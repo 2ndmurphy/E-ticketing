@@ -9,6 +9,6 @@ class MaskapaiController extends Controller
 {
     public function index()
     {
-        return view('pages.maskapai.dashboard');
+        return view('pages.airline.dashboard');
     }
 }
