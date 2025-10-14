@@ -24,7 +24,7 @@ class BookingController extends Controller
             ->orderByDesc('created_at')
             ->paginate(10);
 
-        // return view('user.bookings.index', compact('bookings'));
+        return view('pages.user.bookings.index', compact('bookings'));
     }
 
     /**
@@ -37,7 +37,7 @@ class BookingController extends Controller
             ->where('status', 'active')
             ->findOrFail($flightId);
 
-        // return view('user.bookings.create', compact('flight'));
+        return view('pages.user.bookings.create', compact('flight'));
     }
 
     /**
@@ -76,8 +76,8 @@ class BookingController extends Controller
             ]);
         }
 
-        // return redirect()->route('user.bookings.show', $booking->id)
-        //     ->with('success', 'Booking created successfully!');
+        return redirect()->route('user.bookings.show', $booking->id)
+            ->with('success', 'Booking created successfully!');
     }
 
     /**
@@ -89,7 +89,7 @@ class BookingController extends Controller
 
         $booking->load(['flight.airline', 'flight.departureAirport', 'flight.arrivalAirport', 'passengers']);
 
-        // return view('user.bookings.show', compact('booking'));
+        return view('pages.user.bookings.show', compact('booking'));
     }
 
     /**
@@ -105,8 +105,8 @@ class BookingController extends Controller
 
         $booking->update(['booking_status' => 'cancelled']);
 
-        // return redirect()->route('user.bookings.index')
-        //     ->with('success', 'Booking cancelled successfully.');
+        return redirect()->route('user.bookings.index')
+            ->with('success', 'Booking cancelled successfully.');
     }
 
     /**

@@ -32,7 +32,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     // Maskapai Only
     Route::middleware(['role:maskapai'])->prefix('maskapai')->name('maskapai.')->group(function () {
-        Route::get('/dashboard', [MaskapaiController::class, 'index'])->name('maskapai.dashboard');
+        Route::get('/dashboard', [MaskapaiController::class, 'index'])->name('dashboard');
 
         Route::resource('flights', FlightController::class);
 
@@ -60,6 +60,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
         Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
         Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
+
+        Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+        Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+        Route::get('/profile/password', [ProfileController::class, 'editPassword'])->name('profile.password.edit');
+        Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
     });
 });
 

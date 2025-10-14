@@ -24,7 +24,7 @@ class ProfileController extends Controller
     public function edit()
     {
         $user = Auth::user();
-        // return view('user.profile.edit', compact('user'));
+        return view('pages.user.profile.edit', compact('user'));
     }
 
     /**
@@ -41,8 +41,8 @@ class ProfileController extends Controller
 
         $user->update($validated);
 
-        // return redirect()->route('user.profile.index')
-        //     ->with('success', 'Profile updated successfully!');
+        return redirect()->route('user.profile.index')
+            ->with('success', 'Profile updated successfully!');
     }
 
     /**
@@ -50,7 +50,7 @@ class ProfileController extends Controller
      */
     public function editPassword()
     {
-        // return view('user.profile.password');
+        return view('pages.user.profile.password');
     }
 
     /**
@@ -72,7 +72,7 @@ class ProfileController extends Controller
         $user->password = Hash::make($validated['new_password']);
         $user->save();
 
-        // return redirect()->route('user.profile.index')
-        //     ->with('success', 'Password changed successfully!');
+        return redirect()->route('user.profile.index')
+            ->with('success', 'Password changed successfully!');
     }
 }

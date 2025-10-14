@@ -34,7 +34,7 @@ class FlightController extends Controller
             $flights = $query->orderBy('departure_time')->paginate(10);
         }
 
-        // return view('user.flights.index', compact('airports', 'flights'));
+        return view('pages.user.flights.index', compact('airports', 'flights'));
     }
 
     /**
@@ -46,6 +46,6 @@ class FlightController extends Controller
             ->where('status', 'active')
             ->findOrFail($id);
 
-        // return view('user.flights.show', compact('flight'));
+        return view('pages.user.flights.show', compact('flight'));
     }
 }

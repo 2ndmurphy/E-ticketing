@@ -22,7 +22,7 @@ class PaymentController extends Controller
                 ->with('error', 'Payment cannot be processed for this booking.');
         }
 
-        // return view('user.payments.create', compact('booking'));
+        return view('pages.user.payments.create', compact('booking'));
     }
 
     /**
