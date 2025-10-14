@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\FlightSeatAvailability;
 use Illuminate\Http\Request;
 
-class FlightSeatAvailabilityController extends Controller
+class AirlineFlightSeatAvailabilityController extends Controller
 {
     /**
      * Display a listing of the resource.

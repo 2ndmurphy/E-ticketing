@@ -9,7 +9,7 @@ use App\Models\Flight;
 use App\Models\BookingPassanger;
 use Illuminate\Support\Facades\Auth;
 
-class PassangerController extends Controller
+class AirlinePassangerController extends Controller
 {
     /**
      * Display all passengers for the airline admin’s flights.

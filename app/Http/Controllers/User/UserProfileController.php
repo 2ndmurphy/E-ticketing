@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class ProfileController extends Controller
+class UserProfileController extends Controller
 {
      /**
      * Display user's profile.
@@ -15,7 +15,7 @@ class ProfileController extends Controller
     public function index()
     {
         $user = Auth::user();
-        // return view('user.profile.index', compact('user'));
+        // return view('pages.user.profile.index', compact('user'));
     }
 
     /**

@@ -5,8 +5,8 @@ if (!function_exists('redirectRoute')) {
   {
     return match ($role) {
       'admin' => route('admin.dashboard'),
-      'maskapai' => route('maskapai.dashboard'),
-      'user' => route('user.dashboard'),
+      'maskapai' => route('maskapai.flights.index'),
+      'user' => route('user.flights.index'),
       default => abort(403)
     };
   }

@@ -9,7 +9,7 @@ use App\Models\Flight;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class BookingController extends Controller
+class AirlineBookingController extends Controller
 {
     /**
      * Display all bookings for the airline admin’s flights.

@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
-class FlightController extends Controller
+class AirlineFlightController extends Controller
 {
     /**
      * Display a listing of the flights for the logged-in airline admin.
@@ -29,7 +29,7 @@ class FlightController extends Controller
             ->orderBy('departure_time', 'asc')
             ->paginate(10);
 
-        // return view('airline.flights.index', compact('airline', 'flights'));
+        return view('pages.airline.flights.index', compact('airline', 'flights'));
     }
 
     /**
@@ -41,7 +41,7 @@ class FlightController extends Controller
         $airline = Airline::where('manage_by_user_id', $user->id)->firstOrFail();
         $airports = Airport::query()->orderBy('city')->get();
 
-        // return view('airline.flights.create', compact('airline', 'airports'));
+        return view('pages.airline.flights.create', compact('airline', 'airports'));
     }
 
     /**
@@ -68,8 +68,8 @@ class FlightController extends Controller
 
         Flight::create($validated);
 
-        // return redirect()->route('airline.flights.index')
-        //     ->with('success', 'Flight created successfully!');
+        return redirect()->route('maskapai.flights.index')
+            ->with('success', 'Flight created successfully!');
     }
 
     /**
@@ -79,7 +79,7 @@ class FlightController extends Controller
     {
         $flight->load('departureAirport', 'arrivalAirport', 'seatAvailability');
 
-        // return view('airline.flights.show', compact('flight'));
+        return view('pages.airline.flights.show', compact('flight'));
     }
 
     /**
@@ -96,7 +96,7 @@ class FlightController extends Controller
 
         $airports = Airport::query()->orderBy('city')->get();
 
-        // return view('airline.flights.edit', compact('flight', 'airline', 'airports'));
+        return view('pages.airline.flights.edit', compact('flight', 'airline', 'airports'));
     }
 
     /**
@@ -141,7 +141,7 @@ class FlightController extends Controller
 
         $flight->update(['status'=> 'cancelled']);
 
-        // return redirect()->route('airline.flights.index')
-        //     ->with('success', 'Flight cancelled successfully!');
+        return redirect()->route('maskapai.flights.index')
+            ->with('success', 'Flight cancelled successfully!');
     }
 }

@@ -8,7 +8,7 @@ use App\Models\Flight;
 use App\Models\Airport;
 use Illuminate\Support\Facades\DB;
 
-class FlightController extends Controller
+class UserFlightController extends Controller
 {
     /**
      * Display the flight search form and optionally search results.

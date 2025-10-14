@@ -10,7 +10,7 @@ use App\Models\Booking;
 use App\Models\Flight;
 use App\Models\BookingPassanger;
 
-class BookingController extends Controller
+class UserBookingController extends Controller
 {
     /**
      * Show user's booking list.

@@ -35,10 +35,10 @@ class AuthenticatedSessionController extends Controller
                 $redirect = route('admin.dashboard', absolute: false);
                 break;
             case 'maskapai':
-                $redirect = route('maskapai.dashboard', absolute: false);
+                $redirect = route('maskapai.flights.index', absolute: false);
                 break;
             case 'user':
-                $redirect = route('user.dashboard', absolute: false);
+                $redirect = route('user.flights.index', absolute: false);
                 break;
             default:
                 abort(403, 'Unathorized');
