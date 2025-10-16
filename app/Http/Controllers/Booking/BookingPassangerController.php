@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Booking;
 
+use App\Http\Controllers\Controller;
 use App\Models\BookingPassanger;
 use Illuminate\Http\Request;
 

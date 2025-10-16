@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Airline;
 
+use App\Http\Controllers\Controller;
 use App\Models\FlightSeatAvailability;
 use Illuminate\Http\Request;
 
