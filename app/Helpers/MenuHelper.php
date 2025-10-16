@@ -46,7 +46,7 @@ class MenuHelper
                     'icon' => 'fa fa-user'
                 ],
             ],
-            ' user' => [
+            'user' => [
                 [
                     'label' => 'Penerbangan',
                     'route' => 'user.flights.index',

@@ -1,3 +1,11 @@
+@php
+    use App\Helpers\MenuHelper;
+    $menus = [];
+    if (Auth::check()) {
+        $menus = MenuHelper::getMenuByRole(Auth::user()->role);
+    }
+@endphp
+
 <nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -12,40 +20,18 @@
 
                 <!-- Navigation Links -->
                 @auth
-                    @if (Auth::user()->role === 'admin')
-                        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                            <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('user.flights.index')">
-                                Dashboard
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        @foreach ($menus as $item)
+                            @php
+                                $isActive = MenuHelper::isActive($item);
+                                $href = isset($item['route']) ? route($item['route']) : '#';
+                            @endphp
+
+                            <x-nav-link :href="$href" :active="$isActive">
+                                {{ $item['label'] }}
                             </x-nav-link>
-                        </div>
-                        {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                            <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                                {{ __('Manage Flights') }}
-                            </x-nav-link>
-                        </div> --}}
-                    @elseif (Auth::user()->role === 'maskapai')
-                        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                            <x-nav-link :href="route('maskapai.flights.index')" :active="request()->routeIs('user.flights.index')">
-                                Dashboard
-                            </x-nav-link>
-                        </div>
-                        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                            {{-- <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                                {{ __('Manage Flights') }}
-                            </x-nav-link> --}}
-                        </div>
-                    @else
-                        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                            <x-nav-link :href="route('user.flights.index')" :active="request()->routeIs('user.flights.index')">
-                                Dashboard
-                            </x-nav-link>
-                        </div>
-                        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                            {{-- <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                                {{ __('Manage Flights') }}
-                            </x-nav-link> --}}
-                        </div>
-                    @endif
+                        @endforeach
+                    </div>
                 @endauth
             </div>
 
@@ -98,9 +84,18 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            {{-- <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link> --}}
+            @auth
+                @foreach ($menus as $item)
+                    @php
+                        $isActive = MenuHelper::isActive($item);
+                        $href = isset($item['route']) ? route($item['route']) : '#';
+                    @endphp
+
+                    <x-responsive-nav-link :href="$href" :active="$isActive">
+                        {{ $item['label'] }}
+                    </x-responsive-nav-link>
+                @endforeach
+            @endauth
         </div>
 
         <!-- Responsive Settings Options -->
