@@ -14,35 +14,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = [
-            [
-                'name' => 'Admin',
-                'username' => 'admin123',
-                'email' => 'test@example.com',
-                'email_verified_at' => now(),
-                'password' => bcrypt('password'),
-                'role' => 'admin'
-            ],
-            [
-                'name' => 'Maskapai',
-                'username' => 'maskapai123',
-                'email' => 'maskapai@example.com',
-                'email_verified_at' => now(),
-                'password' => bcrypt('password'),
-                'role' => 'maskapai'
-            ],
-            [
-                'name' => 'User',
-                'username' => 'user123',
-                'email' => 'user@example.com',
-                'email_verified_at' => now(),
-                'password' => bcrypt('password'),
-                'role' => 'user'
-            ],
-        ];
-
-        foreach ($users as $user) {
-            DB::table('users')->insert($user);
-        }
+        $this->call([
+            UserSeeder::class,
+            AirlineSeeder::class,
+            AirportSeeder::class,
+            FlightSeeder::class,
+            BookingSeeder::class,
+            BookingPassengerSeeder::class,
+        ]);
     }
 }

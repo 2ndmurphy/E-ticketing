@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->decimal('total_price', 10, 2);
             $table->enum('payment_status', ['unpaid', 'paid ']);
             $table->enum('booking_status', ['pending', 'confirmed', 'cancelled', 'completed'])->default('pending');
+            $table->datetime('paid_at')->nullable();
             $table->datetime('booking_date')->useCurrent();
             $table->timestamps();
         });

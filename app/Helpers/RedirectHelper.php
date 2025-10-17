@@ -1,6 +1,7 @@
 <?php
 
 if (!function_exists('redirectRoute')) {
+
   function redirectRoute($role)
   {
     return match ($role) {

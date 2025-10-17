@@ -22,7 +22,7 @@ class AirlineFlightController extends Controller
             return abort(403);
         }
 
-        $airline = Airline::where('manage_by_user_id', $user->id)->firstOrFail();
+        $airline = Airline::where('manage_by_user_id', $user->id)->first();
 
         $flights = Flight::with(['departureAirport', 'arrivalAirport', 'seatAvailability'])
             ->where('airline_id', $airline->id)
@@ -38,7 +38,12 @@ class AirlineFlightController extends Controller
     public function create()
     {
         $user = Auth::user();
-        $airline = Airline::where('manage_by_user_id', $user->id)->firstOrFail();
+        $airline = Airline::where('manage_by_user_id', $user->id)->first();
+
+        if (!$airline) {
+            flash()->use('theme.neon')->warning('Please complete your airline profile before creating flights.');
+            return redirect()->route('maskapai.profile.edit');
+        }
         $airports = Airport::query()->orderBy('city')->get();
 
         return view('pages.airline.flights.create', compact('airline', 'airports'));
@@ -50,14 +55,19 @@ class AirlineFlightController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        $airline = Airline::where('manage_by_user_id', $user->id)->firstOrFail();
+        $airline = Airline::where('manage_by_user_id', $user->id)->first();
+
+        if (!$airline) {
+            flash()->use('theme.neon')->warning('Please complete your airline profile before creating flights.');
+            return redirect()->route('maskapai.profile.edit');
+        }
 
         $validated = $request->validate([
             'flight_number' => 'required|string|max:100|unique:flights',
             'departure_airport_id' => 'required|exists:airports,id',
-            'arrival_airport_id' => 'required|exists:airport,id|different:departure_airport_id',
+            'arrival_airport_id' => 'required|exists:airports,id|different:departure_airport_id',
             'departure_time' => 'required|date|after:now',
-            'arrival_time' => 'require|date|after:departure_time',
+            'arrival_time' => 'required|date|after:departure_time',
             'price' => 'required|numeric|min:0',
             'total_seats' => 'required|integer|min:1',
         ]);
@@ -88,7 +98,12 @@ class AirlineFlightController extends Controller
     public function edit(Flight $flight)
     {
         $user = Auth::user();
-        $airline = Airline::where('manage_by_user_id', $user->id)->firstOrFail();
+        $airline = Airline::where('manage_by_user_id', $user->id)->first();
+
+        if (!$airline) {
+            flash()->use('theme.neon')->warning('Please complete your airline profile before editing flights.');
+            return redirect()->route('maskapai.profile.edit');
+        }
 
         if ($flight->airline_id !== $airline->id) {
             return abort(403, 'You do not have permission to edit this flight.');
@@ -105,7 +120,12 @@ class AirlineFlightController extends Controller
     public function update(Request $request, Flight $flight)
     {
         $user = Auth::user();
-        $airline = Airline::where('manage_by_user_id', $user->id)->firstOrFail();
+        $airline = Airline::where('manage_by_user_id', $user->id)->first();
+
+        if (!$airline) {
+            flash()->use('theme.neon')->warning('Please complete your airline profile before updating flights.');
+            return redirect()->route('maskapai.profile.edit');
+        }
 
         if ($flight->airline_id !== $airline->id) {
             abort(403, 'Unauthorized action.');
@@ -114,9 +134,9 @@ class AirlineFlightController extends Controller
         $validated = $request->validate([
             'flight_number' => 'required|string|max:100|unique:flights',
             'departure_airport_id' => 'required|exists:airports,id',
-            'arrival_airport_id' => 'required|exists:airport,id|different:departure_airport_id',
+            'arrival_airport_id' => 'required|exists:airports,id|different:departure_airport_id',
             'departure_time' => 'required|date|after:now',
-            'arrival_time' => 'require|date|after:departure_time',
+            'arrival_time' => 'required|date|after:departure_time',
             'price' => 'required|numeric|min:0',
             'total_seats' => 'required|integer|min:1',
         ]);
@@ -133,7 +153,12 @@ class AirlineFlightController extends Controller
     public function destroy(Flight $flight)
     {
         $user = Auth::user();
-        $airline = Airline::where('manage_by_user_id', $user->id)->firstOrFail();
+        $airline = Airline::where('manage_by_user_id', $user->id)->first();
+
+        if (!$airline) {
+            flash()->use('theme.neon')->warning('Please complete your airline profile before managing flights.');
+            return redirect()->route('maskapai.profile.edit');
+        }
 
         if ($flight->airline_id !== $airline->id) {
             abort(403, 'Unauthorized action.');

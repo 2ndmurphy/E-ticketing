@@ -22,7 +22,7 @@ class AirlineBookingController extends Controller
             abort(403, 'Access denied.');
         }
 
-        $airline = Airline::where('managed_by_user_id', $user->id)->firstOrFail();
+        $airline = Airline::where('manage_by_user_id', $user->id)->firstOrFail();
 
         // Find all flights owned by this airline
         $flightIds = Flight::where('airline_id', $airline->id)->pluck('id');
@@ -66,7 +66,7 @@ class AirlineBookingController extends Controller
     public function show(Booking $booking)
     {
         $user = Auth::user();
-        $airline = Airline::where('managed_by_user_id', $user->id)->firstOrFail();
+        $airline = Airline::where('manage_by_user_id', $user->id)->firstOrFail();
 
         // Ensure booking belongs to this airline
         if ($booking->flight->airline_id !== $airline->id) {
@@ -84,7 +84,7 @@ class AirlineBookingController extends Controller
     public function updateStatus(Request $request, Booking $booking)
     {
         $user = Auth::user();
-        $airline = Airline::where('managed_by_user_id', $user->id)->firstOrFail();
+        $airline = Airline::where('manage_by_user_id', $user->id)->firstOrFail();
 
         if ($booking->flight->airline_id !== $airline->id) {
             abort(403, 'Unauthorized action.');

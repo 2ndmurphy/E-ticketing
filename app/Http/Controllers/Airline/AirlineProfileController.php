@@ -13,7 +13,7 @@ class AirlineProfileController extends Controller
     /**
      * Display the airline profile.
      */
-    public function index()
+    public function edit()
     {
         $user = Auth::user();
 
@@ -21,9 +21,9 @@ class AirlineProfileController extends Controller
             abort(403, 'Access denied.');
         }
 
-        $airline = Airline::where('managed_by_user_id', $user->id)->firstOrFail();
+        $airline = Airline::where('manage_by_user_id', $user->id)->firstOrFail();
 
-        // return view('airline.profile.index', compact('airline'));
+        return view('pages.airline.profile.edit', compact('airline'));
     }
 
     /**
@@ -32,7 +32,7 @@ class AirlineProfileController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
-        $airline = Airline::where('managed_by_user_id', $user->id)->firstOrFail();
+        $airline = Airline::where('manage_by_user_id', $user->id)->firstOrFail();
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -43,7 +43,7 @@ class AirlineProfileController extends Controller
 
         $airline->update($validated);
 
-        // return redirect()->route('airline.profile.index')
-        //     ->with('success', 'Airline profile updated successfully!');
+        return redirect()->route('maskapai.profile.edit')
+            ->with('success', 'Airline profile updated successfully!');
     }
 }

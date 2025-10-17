@@ -42,7 +42,7 @@ class MenuHelper
                 ],
                 [
                     'label' => 'Profil',
-                    'route' => 'maskapai.profile.index',
+                    'route' => 'maskapai.profile.edit',
                     'icon' => 'fa fa-user'
                 ],
             ],

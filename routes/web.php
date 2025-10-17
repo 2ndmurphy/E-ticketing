@@ -40,7 +40,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/passengers', [AirlinePassangerController::class, 'index'])->name('passengers.index');
         Route::get('/passengers/export/{flightId}', [AirlinePassangerController::class, 'export'])->name('passengers.export');
 
-        Route::get('/profile', [AirlineProfileController::class, 'index'])->name('profile.index');
+        // Route::get('/profile', [AirlineProfileController::class, 'index'])->name('profile.index');
         Route::get('/profile/edit', [AirlineProfileController::class, 'edit'])->name('profile.edit');
         Route::put('/profile', [AirlineProfileController::class, 'update'])->name('profile.update');
     });

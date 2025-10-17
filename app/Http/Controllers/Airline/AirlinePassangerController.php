@@ -18,11 +18,11 @@ class AirlinePassangerController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user->isAirlineAdmin()) {
+        if (!$user->isMaskapai()) {
             abort(403, 'Access denied.');
         }
 
-        $airline = Airline::where('managed_by_user_id', $user->id)->firstOrFail();
+        $airline = Airline::where('manage_by_user_id', $user->id)->firstOrFail();
 
         // Optional filter by flight
         $flights = Flight::where('airline_id', $airline->id)
@@ -54,7 +54,7 @@ class AirlinePassangerController extends Controller
     public function export($flightId)
     {
         $user = Auth::user();
-        $airline = Airline::where('managed_by_user_id', $user->id)->firstOrFail();
+        $airline = Airline::where('manage_by_user_id', $user->id)->firstOrFail();
 
         $flight = Flight::where('id', $flightId)
             ->where('airline_id', $airline->id)
@@ -63,7 +63,7 @@ class AirlinePassangerController extends Controller
 
         $passengers = BookingPassanger::whereHas('booking', function ($q) use ($flight) {
             $q->where('flight_id', $flight->id)
-              ->whereIn('booking_status', ['confirmed', 'completed']);
+                ->whereIn('booking_status', ['confirmed', 'completed']);
         })->get();
 
         $csv = "Passenger Name,Email,Seat Number,Booking Code\n";
