@@ -126,7 +126,7 @@ class UserBookingController extends Controller
     public function paymentBooking(Booking $booking)
     {
         // Pastikan booking milik user yang login
-        if ($booking->user_id !== Auth::id()) {
+        if ($booking->user_id !== Auth::user()->id) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -143,7 +143,10 @@ class UserBookingController extends Controller
                 ]
             );
 
-            $booking->histories()->update(['status' => 'paid', 'notes' => 'Payment completed by user.']);
+            $booking->histories()->create([
+                'status' => 'paid',
+                'notes' => 'Payment completed by user.'
+            ]);
 
             return back()->with('success', 'Pembayaran berhasil! Booking kamu sudah dikonfirmasi.');
         } catch (\Exception $e) {

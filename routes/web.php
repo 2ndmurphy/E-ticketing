@@ -56,7 +56,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/bookings/create/{flight}', [UserBookingController::class, 'create'])->name('bookings.create');
         Route::post('/bookings', [UserBookingController::class, 'store'])->name('bookings.store');
         Route::get('/bookings/{booking}', [UserBookingController::class, 'show'])->name('bookings.show');
-        Route::post('/bookings/{booking/payment', [UserBookingController::class, 'paymentBooking'])->name('bookings.payment');
+        Route::post('/bookings/{booking}/payment', [UserBookingController::class, 'paymentBooking'])->name('bookings.payment');
         Route::post('/bookings/{booking}/cancel', [UserBookingController::class, 'cancel'])->name('bookings.cancel');
 
         Route::get('/profile/edit', [UserProfileController::class, 'edit'])->name('profile.edit');

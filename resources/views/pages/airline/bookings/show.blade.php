@@ -35,7 +35,7 @@
                                     {{ ucfirst($booking->booking_status) }}
                                 </span>
                             </p>
-                            <p><span class="font-medium">Total Price:</span> Rp{{ number_format($booking->total_price, 0, ',', '.') }}</p>
+                            <p><span class="font-medium">Total Price:</span> Rp {{ number_format($booking->total_price, 0, ',', '.') }}</p>
                             <p><span class="font-medium">Seats Booked:</span> {{ $booking->number_of_seats }}</p>
                         </div>
                         <div>
@@ -62,7 +62,7 @@
                         </div>
                         <div>
                             <p><span class="font-medium">Arrival:</span> {{ $booking->flight->arrival_time->format('Y-m-d H:i') }}</p>
-                            <p><span class="font-medium">Price per Seat:</span> Rp{{ number_format($booking->price_per_seat, 0, ',', '.') }}</p>
+                            <p><span class="font-medium">Price per Seat:</span> Rp {{ number_format($booking->flight->price, 0, ',', '.') }}</p>
                             <p><span class="font-medium">Flight Status:</span> {{ ucfirst($booking->flight->status) }}</p>
                         </div>
                     </div>

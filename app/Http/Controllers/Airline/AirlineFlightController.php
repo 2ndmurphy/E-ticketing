@@ -29,7 +29,7 @@ class AirlineFlightController extends Controller
         $search = $request->query('search');
         $status = $request->query('status');
 
-        $flightsQuery = Flight::with(['departureAirport', 'arrivalAirport', 'seatAvailability'])
+        $flightsQuery = Flight::with(['departureAirport', 'arrivalAirport'])
             ->search($search)
             ->where('airline_id', $airline->id)
             ->orderBy('departure_time', 'asc');
