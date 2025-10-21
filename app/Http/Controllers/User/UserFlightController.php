@@ -18,7 +18,7 @@ class UserFlightController extends Controller
         $airports = Airport::all();
 
         $flights = collect();
-        $query = Flight::with(['airline', 'departureAirport', 'arrivalAirport', 'seatAvailability'])
+        $query = Flight::with(['airline', 'departureAirport', 'arrivalAirport'])
             ->where('status', 'active');
 
         if ($request->filled(['from', 'to'])) {
@@ -42,10 +42,11 @@ class UserFlightController extends Controller
      */
     public function show($id)
     {
-        $flight = Flight::with(['airline', 'departureAirport', 'arrivalAirport', 'seatAvailability'])
+        $flight = Flight::with(['airline', 'departureAirport', 'arrivalAirport'])
             ->where('status', 'active')
             ->findOrFail($id);
+        $availableSeats = $flight->available_seats;
 
-        return view('pages.user.flights.show', compact('flight'));
+        return view('pages.user.flights.show', compact('flight', 'availableSeats'));
     }
 }

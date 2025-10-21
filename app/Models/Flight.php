@@ -26,7 +26,7 @@ class Flight extends Model
 
     public function airline()
     {
-        return $this->belongsTo(Airline::class);
+        return $this->belongsTo(Airline::class, 'airline_id');
     }
 
     public function departureAirport()
@@ -41,20 +41,21 @@ class Flight extends Model
 
     public function bookings()
     {
-        return $this->hasMany(Booking::class);
-    }
-
-    public function seatAvailability()
-    {
-        return $this->hasOne(FlightSeatAvailability::class, 'flight_id');
+        return $this->hasMany(Booking::class, 'flight_id');
     }
 
     public function getAvailableSeatsAttribute()
     {
-        return optional($this->seatAvailability)->available_seats ?? $this->total_seats;
+        // Hitung total kursi yang sudah dipesan untuk flight ini
+        $bookedSeats = $this->bookings()
+            ->whereIn('booking_status', ['confirmed', 'pending'])
+            ->sum('number_of_seats');
+
+        // Hitung sisa kursi
+        return max(0, $this->total_seats - $bookedSeats);
     }
 
-    // Flight search Scope
+    // Flight Scope Pencarian
     public function scopeSearch(Builder $query, $searchTerm = null)
     {
         if ($searchTerm) {

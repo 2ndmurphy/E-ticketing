@@ -53,12 +53,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/flights/{id}', [UserFlightController::class, 'show'])->name('flights.show');
 
         Route::get('/bookings', [UserBookingController::class, 'index'])->name('bookings.index');
-        Route::get('/bookings/create', [UserBookingController::class, 'create'])->name('bookings.create');
+        Route::get('/bookings/create/{flight}', [UserBookingController::class, 'create'])->name('bookings.create');
         Route::post('/bookings', [UserBookingController::class, 'store'])->name('bookings.store');
         Route::get('/bookings/{booking}', [UserBookingController::class, 'show'])->name('bookings.show');
+        Route::post('/bookings/{booking/payment', [UserBookingController::class, 'paymentBooking'])->name('bookings.payment');
         Route::post('/bookings/{booking}/cancel', [UserBookingController::class, 'cancel'])->name('bookings.cancel');
 
-        // Route::get('/profile', [UserProfileController::class, 'index'])->name('profile.index');
         Route::get('/profile/edit', [UserProfileController::class, 'edit'])->name('profile.edit');
         Route::put('/profile', [UserProfileController::class, 'update'])->name('profile.update');
 

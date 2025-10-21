@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\BookingHistory;
+use App\Models\FlightSeatAvailability;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\Booking;
 use App\Models\Flight;
 use App\Models\BookingPassanger;
+use Illuminate\Support\Facades\DB;
 
 class UserBookingController extends Controller
 {
@@ -30,12 +33,11 @@ class UserBookingController extends Controller
     /**
      * Show booking creation form for selected flight.
      */
-    public function create(Request $request)
+    public function create(Flight $flight)
     {
-        $flightId = $request->get('flight_id');
-        $flight = Flight::with(['airline', 'departureAirport', 'arrivalAirport'])
+        Flight::with(['airline', 'departureAirport', 'arrivalAirport'])
             ->where('status', 'active')
-            ->findOrFail($flightId);
+            ->findOrFail($flight->id);
 
         return view('pages.user.bookings.create', compact('flight'));
     }
@@ -53,34 +55,29 @@ class UserBookingController extends Controller
             'passengers.*.seat_number' => 'nullable|string|max:10',
         ]);
 
-        $flight = Flight::with('seatAvailability')->findOrFail($validated['flight_id']);
-
+        // Pastikan kita ambil flight berdasarkan flight_id (bukan memanggil find pada instance route-bound)
+        $flight = Flight::findOrFail($validated['flight_id']);
         $requestedSeats = count($validated['passengers']);
+        $availableSeats = $flight->available_seats;
 
-        // Generate a unique booking code
+        if ($requestedSeats > $availableSeats) {
+            return back()->with('error', 'Jumlah penumpang melebihi kursi yang tersedia!');
+        }
+
         $bookingCode = 'BK-' . strtoupper(Str::random(6));
 
-        // Use transaction to avoid race conditions. We will check available seats first.
         try {
-            $booking = \DB::transaction(function () use ($flight, $validated, $requestedSeats, $bookingCode) {
-                // Refresh flight seat availability inside transaction
-                $flight->refresh();
-
-                $available = $flight->available_seats;
-                if ($requestedSeats > $available) {
-                    throw new \Exception('Not enough seats available.');
-                }
-
+            $booking = DB::transaction(function () use ($flight, $validated, $requestedSeats, $bookingCode) {
                 $booking = Booking::create([
+                    'booking_code' => $bookingCode,
                     'user_id' => Auth::id(),
                     'flight_id' => $flight->id,
-                    'booking_code' => $bookingCode,
-                    'booking_status' => 'confirmed', // directly confirm for simplicity
+                    'booking_status' => 'pending',
                     'number_of_seats' => $requestedSeats,
                     'total_price' => $requestedSeats * $flight->price,
+                    'payment_status' => 'unpaid',
                 ]);
 
-                // Save passengers
                 foreach ($validated['passengers'] as $p) {
                     BookingPassanger::create([
                         'booking_id' => $booking->id,
@@ -90,10 +87,24 @@ class UserBookingController extends Controller
                     ]);
                 }
 
+                BookingHistory::create([
+                    'booking_id' => $booking->id,
+                    'status' => 'pending',
+                    'notes' => 'Booking created and pending payment.',
+                ]);
+
+                // Optional: update cached booked seats
+                $flight->booked_seats = $flight->bookings()
+                    ->whereIn('booking_status', ['pending', 'confirmed'])
+                    ->sum('number_of_seats');
+                $flight->save();
+
                 return $booking;
             });
         } catch (\Exception $e) {
-            return back()->with('error', $e->getMessage());
+            // debug: tampilkan pesan error selama dev
+            dd($e->getMessage(), $e->getTraceAsString());
+            return back()->with('error', 'Booking Gagal: ' . $e->getMessage());
         }
 
         return redirect()->route('user.bookings.show', $booking->id)
@@ -110,6 +121,34 @@ class UserBookingController extends Controller
         $booking->load(['flight.airline', 'flight.departureAirport', 'flight.arrivalAirport', 'passengers']);
 
         return view('pages.user.bookings.show', compact('booking'));
+    }
+
+    public function paymentBooking(Booking $booking)
+    {
+        // Pastikan booking milik user yang login
+        if ($booking->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Cek apakah sudah dibayar
+        if ($booking->payment_status === 'paid') {
+            return back()->with('info', 'Booking ini sudah dibayar.');
+        }
+
+        try {
+            $booking->update(
+                [
+                    'payment_status' => 'paid',
+                    'paid_at' => now(),
+                ]
+            );
+
+            $booking->histories()->update(['status' => 'paid', 'notes' => 'Payment completed by user.']);
+
+            return back()->with('success', 'Pembayaran berhasil! Booking kamu sudah dikonfirmasi.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal memproses pembayaran: ' . $e->getMessage());
+        }
     }
 
     /**

@@ -20,22 +20,22 @@ class Booking extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function flight()
     {
-        return $this->belongsTo(Flight::class);
+        return $this->belongsTo(Flight::class, 'flight_id');
     }
 
     public function passengers()
     {
-        return $this->hasMany(BookingPassanger::class);
+        return $this->hasMany(BookingPassanger::class, 'booking_id');
     }
 
     public function histories()
     {
-        return $this->hasMany(BookingHistory::class);
+        return $this->hasMany(BookingHistory::class, 'booking_id');
     }
 
     public function getIsPaidAttribute()

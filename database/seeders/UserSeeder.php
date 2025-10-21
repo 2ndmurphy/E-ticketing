@@ -16,6 +16,14 @@ class UserSeeder extends Seeder
     {
         // Airline Admin
         User::create([
+            'name' => 'Admin',
+            'username' => 'admin123',
+            'email' => 'admin@test.com',
+            'password' => Hash::make('password'),
+            'role' => 'admin',
+        ]);
+
+        User::create([
             'name' => 'Airline Admin',
             'username' => 'admin_maskapai',
             'email' => 'admin@airfly.com',
@@ -28,6 +36,14 @@ class UserSeeder extends Seeder
             'name' => 'John Doe',
             'username' => 'johndoe123',
             'email' => 'john@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'user',
+        ]);
+
+        User::create([
+            'name' => 'Murphy Lawden',
+            'username' => 'murphy123',
+            'email' => 'murphy@example.com',
             'password' => Hash::make('password'),
             'role' => 'user',
         ]);
