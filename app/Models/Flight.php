@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Flight extends Model
 {
@@ -11,11 +12,16 @@ class Flight extends Model
         'flight_number',
         'departure_airport_id',
         'arrival_airport_id',
-        'departur_time',
+        'departure_time',
         'arrival_time',
         'price',
         'total_seats',
         'status'
+    ];
+
+    protected $casts = [
+        'departure_time' => 'datetime',
+        'arrival_time' => 'datetime',
     ];
 
     public function airline()
@@ -48,4 +54,23 @@ class Flight extends Model
         return optional($this->seatAvailability)->available_seats ?? $this->total_seats;
     }
 
+    // Flight search Scope
+    public function scopeSearch(Builder $query, $searchTerm = null)
+    {
+        if ($searchTerm) {
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('flight_number', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('status', 'like', '%' . $searchTerm . '%')
+                    ->orWhereHas('departureAirport', function ($q2) use ($searchTerm) {
+                        $q2->where('city', 'like', '%' . $searchTerm . '%')
+                            ->orWhere('code', 'like', '%' . $searchTerm . '%');
+                    })
+                    ->orWhereHas('arrivalAirport', function ($q3) use ($searchTerm) {
+                        $q3->where('city', 'like', '%' . $searchTerm . '%')
+                            ->orWhere('code', 'like', '%' . $searchTerm . '%');
+                    });
+            });
+        }
+        return $query;
+    }
 }

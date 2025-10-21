@@ -12,16 +12,16 @@
         </a>
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-            <div class="flex items-center gap-2">
+            <form method="GET" action="{{ route('maskapai.flights.index') }}" class="flex items-center gap-2">
                 <input type="text" name="search" placeholder="Search flight..." value="{{ request('search') }}"
                     class="border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
                 <select name="status" class="border-gray-300 dark:border-gray-700 rounded-md shadow-sm text-sm">
-                    <option value="">All Status</option>
-                    <option value="active">Active</option>
-                    <option value="cancelled">Cancelled</option>
+                    <option value="" {{ request('status') == '' ? 'selected' : '' }}>All Status</option>
+                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
+                    <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                 </select>
-                <button class="px-3 py-2 bg-gray-700 text-white rounded-md text-sm">Filter</button>
-            </div>
+                <button type="submit" class="px-3 py-2 bg-gray-700 text-white rounded-md text-sm">Filter</button>
+            </form>
         </div>
 
         <div class="overflow-x-auto bg-white dark:bg-gray-800 shadow rounded-lg">
@@ -37,31 +37,31 @@
                         <th class="px-4 py-3 text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-700 text-gray-600 dark:text-gray-400">
                     @foreach ($flights as $flight)
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-900 transition">
-                            <td class="px-4 py-3 font-medium">{{ $flight->flight_number }}</td>
-                            <td class="px-4 py-3">
-                                {{ $flight->departureAirport->code }} → {{ $flight->arrivalAirport->code }}
-                            </td>
-                            <td class="px-4 py-3">
-                                {{-- {{ $flight->departure_time->format('Y-m-d H:i') }} --}}
-                            </td>
-                            <td class="px-4 py-3">
-                                {{ $flight->seatAvailability->available_seats ?? $flight->total_seats }}
-                            </td>
-                            <td class="px-4 py-3 capitalize">
-                                <span class="px-2 py-1 rounded-full text-xs font-semibold
-                                {{ $flight->status === 'active' ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' :
+                                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-900 transition">
+                                        <td class="px-4 py-3 font-medium">{{ $flight->flight_number }}</td>
+                                        <td class="px-4 py-3">
+                                            {{ $flight->departureAirport->code }} → {{ $flight->arrivalAirport->code }}
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            {{ $flight->departure_time->format('Y-m-d H:i') }}
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            {{ $flight->seatAvailability->available_seats ?? $flight->total_seats }}
+                                        </td>
+                                        <td class="px-4 py-3 capitalize">
+                                            <span class="px-2 py-1 rounded-full text-xs font-semibold
+                                                                                                {{ $flight->status === 'active' ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' :
                         'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100' }}">
-                                {{ $flight->status }}
-                                </span>
-                            </td>
-                            <td class="px-4 py-3 text-right">
-                                <a href="{{ route('maskapai.flights.show', $flight) }}"
-                                class="text-blue-600 hover:text-blue-800 font-medium mr-3">View</a>
-                                <a href="{{ route('maskapai.flights.edit', $flight) }}"
-                                class="text-blue-600 hover:text-blue-800 font-medium mr-3">Edit</a>
+                                                {{ $flight->status }}
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-3 text-right">
+                                            <a href="{{ route('maskapai.flights.show', $flight) }}"
+                                                class="text-blue-600 hover:text-blue-800 font-medium mr-3">View</a>
+                                            <a href="{{ route('maskapai.flights.edit', $flight) }}"
+                                                class="text-blue-600 hover:text-blue-800 font-medium mr-3">Edit</a>
                                             <form action="{{ route('maskapai.flights.destroy', $flight->id) }}" method="POST"
                                                 class="inline">
                                                 @csrf @method('DELETE')

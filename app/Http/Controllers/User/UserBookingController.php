@@ -53,27 +53,47 @@ class UserBookingController extends Controller
             'passengers.*.seat_number' => 'nullable|string|max:10',
         ]);
 
-        $flight = Flight::findOrFail($validated['flight_id']);
+        $flight = Flight::with('seatAvailability')->findOrFail($validated['flight_id']);
+
+        $requestedSeats = count($validated['passengers']);
 
         // Generate a unique booking code
         $bookingCode = 'BK-' . strtoupper(Str::random(6));
 
-        $booking = Booking::create([
-            'user_id' => Auth::id(),
-            'flight_id' => $flight->id,
-            'booking_code' => $bookingCode,
-            'booking_status' => 'pending',
-            'total_price' => count($validated['passengers']) * $flight->price,
-        ]);
+        // Use transaction to avoid race conditions. We will check available seats first.
+        try {
+            $booking = \DB::transaction(function () use ($flight, $validated, $requestedSeats, $bookingCode) {
+                // Refresh flight seat availability inside transaction
+                $flight->refresh();
 
-        // Save passengers
-        foreach ($validated['passengers'] as $p) {
-            BookingPassanger::create([
-                'booking_id' => $booking->id,
-                'name' => $p['name'],
-                'email' => $p['email'] ?? null,
-                'seat_number' => $p['seat_number'] ?? null,
-            ]);
+                $available = $flight->available_seats;
+                if ($requestedSeats > $available) {
+                    throw new \Exception('Not enough seats available.');
+                }
+
+                $booking = Booking::create([
+                    'user_id' => Auth::id(),
+                    'flight_id' => $flight->id,
+                    'booking_code' => $bookingCode,
+                    'booking_status' => 'confirmed', // directly confirm for simplicity
+                    'number_of_seats' => $requestedSeats,
+                    'total_price' => $requestedSeats * $flight->price,
+                ]);
+
+                // Save passengers
+                foreach ($validated['passengers'] as $p) {
+                    BookingPassanger::create([
+                        'booking_id' => $booking->id,
+                        'name' => $p['name'],
+                        'email' => $p['email'] ?? null,
+                        'seat_number' => $p['seat_number'] ?? null,
+                    ]);
+                }
+
+                return $booking;
+            });
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
         }
 
         return redirect()->route('user.bookings.show', $booking->id)

@@ -59,7 +59,7 @@ class MenuHelper
                 ],
                 [
                     'label' => 'Profil',
-                    'route' => 'user.profile.index',
+                    'route' => 'user.profile.edit',
                     'icon' => 'fa fa-user'
                 ],
             ],
@@ -68,6 +68,30 @@ class MenuHelper
 
         return $menus;
     }
+
+    public static function findProfileMenu(string $role): ?array
+    {
+        $menus = static::getMenuByRole($role);
+
+        foreach ($menus as $item) {
+            // cek berdasarkan nama route yang mengandung 'profile'
+            if (!empty($item['route']) && str_contains($item['route'], 'profile')) {
+                return $item;
+            }
+
+            // kalau punya children, cari di dalamnya juga
+            if (!empty($item['children'])) {
+                foreach ($item['children'] as $child) {
+                    if (!empty($child['route']) && str_contains($child['route'], 'profile')) {
+                        return $child;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
 
     /**
      * Helper: check if an item (or its children) match the current route name.

@@ -22,7 +22,7 @@ class AirlineBookingController extends Controller
             abort(403, 'Access denied.');
         }
 
-        $airline = Airline::where('manage_by_user_id', $user->id)->firstOrFail();
+        $airline = Airline::where('manage_by_user_id', $user->id)->first();
 
         // Find all flights owned by this airline
         $flightIds = Flight::where('airline_id', $airline->id)->pluck('id');
@@ -41,23 +41,7 @@ class AirlineBookingController extends Controller
 
         $bookings = $query->orderBy('created_at', 'desc')->paginate(10);
 
-        // return view('airline.bookings.index', compact('bookings', 'airline'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        return view('pages.airline.bookings.index', compact('bookings', 'airline'));
     }
 
     /**
@@ -75,7 +59,7 @@ class AirlineBookingController extends Controller
 
         $booking->load(['flight.departureAirport', 'flight.arrivalAirport', 'passengers']);
 
-        // return view('airline.bookings.show', compact('booking', 'airline'));
+        return view('pages.airline.bookings.show', compact('booking', 'airline'));
     }
 
     /**
@@ -100,36 +84,12 @@ class AirlineBookingController extends Controller
 
         // Optionally: log the status change
         $booking->histories()->create([
-            'user_id' => $user->id,
+            'booking_id' => $user->id,
             'status' => $validated['status'],
             'notes' => $validated['notes'] ?? 'Status changed by airline admin',
         ]);
 
-        // return redirect()->route('airline.bookings.show', $booking->id)
-        //     ->with('success', 'Booking status updated successfully.');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Booking $booking)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Booking $booking)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Booking $booking)
-    {
-        //
+        return redirect()->route('maskapai.bookings.index')
+            ->with('success', 'Booking status updated successfully.');
     }
 }

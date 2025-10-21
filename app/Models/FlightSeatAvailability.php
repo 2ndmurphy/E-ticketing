@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class FlightSeatAvailability extends Model
 {
-    protected $table = 'flight_seat_availability'; // must match view name
-    protected $primaryKey = 'flight_id'; // since the view uses flight_id as unique key
-    public $incrementing = false; // because it's a view
-    public $timestamps = false;   // no created_at / updated_at columns
+    // Switch to a writable table implementation. If you prefer the read-only DB view,
+    // set this back to 'flight_seat_availability' and adjust primaryKey/flags accordingly.
+    protected $table = 'flight_seat_availabilities';
+    protected $primaryKey = 'flight_id';
+    public $incrementing = false; // flight_id is not auto-incrementing
+    public $timestamps = true;    // migration creates timestamps
 
     protected $fillable = [
         'flight_id',

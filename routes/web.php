@@ -35,7 +35,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/bookings', [AirlineBookingController::class, 'index'])->name('bookings.index');
         Route::get('/bookings/{booking}', [AirlineBookingController::class, 'show'])->name('bookings.show');
-        Route::post('/bookings/{booking}/update-status', [AirlineBookingController::class, 'updateStatus'])->name('bookings.update-status');
+        Route::put('/bookings/{booking}/update-status', [AirlineBookingController::class, 'updateStatus'])->name('bookings.update-status');
 
         Route::get('/passengers', [AirlinePassangerController::class, 'index'])->name('passengers.index');
         Route::get('/passengers/export/{flightId}', [AirlinePassangerController::class, 'export'])->name('passengers.export');
@@ -58,8 +58,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/bookings/{booking}', [UserBookingController::class, 'show'])->name('bookings.show');
         Route::post('/bookings/{booking}/cancel', [UserBookingController::class, 'cancel'])->name('bookings.cancel');
 
-        Route::get('/profile', [UserProfileController::class, 'index'])->name('profile.index');
-        // Route::get('/profile/edit', [UserProfileController::class, 'edit'])->name('profile.edit');
+        // Route::get('/profile', [UserProfileController::class, 'index'])->name('profile.index');
+        Route::get('/profile/edit', [UserProfileController::class, 'edit'])->name('profile.edit');
         Route::put('/profile', [UserProfileController::class, 'update'])->name('profile.update');
 
         Route::get('/profile/password', [UserProfileController::class, 'editPassword'])->name('profile.password.edit');

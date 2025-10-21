@@ -22,7 +22,7 @@ class AirlinePassangerController extends Controller
             abort(403, 'Access denied.');
         }
 
-        $airline = Airline::where('manage_by_user_id', $user->id)->firstOrFail();
+        $airline = Airline::where('manage_by_user_id', $user->id)->first();
 
         // Optional filter by flight
         $flights = Flight::where('airline_id', $airline->id)
@@ -45,7 +45,7 @@ class AirlinePassangerController extends Controller
             })->with('booking')->orderBy('name')->get();
         }
 
-        // return view('airline.passengers.index', compact('airline', 'flights', 'passengers', 'selectedFlightId'));
+        return view('pages.airline.passengers.index', compact('airline', 'flights', 'passengers', 'selectedFlightId'));
     }
 
     /**

@@ -9,15 +9,6 @@ use Illuminate\Support\Facades\Hash;
 
 class UserProfileController extends Controller
 {
-     /**
-     * Display user's profile.
-     */
-    public function index()
-    {
-        $user = Auth::user();
-        // return view('pages.user.profile.index', compact('user'));
-    }
-
     /**
      * Show edit profile form.
      */
@@ -41,7 +32,7 @@ class UserProfileController extends Controller
 
         $user->update($validated);
 
-        return redirect()->route('user.profile.index')
+        return redirect()->route('user.profile.edit')
             ->with('success', 'Profile updated successfully!');
     }
 
@@ -72,7 +63,7 @@ class UserProfileController extends Controller
         $user->password = Hash::make($validated['new_password']);
         $user->save();
 
-        return redirect()->route('user.profile.index')
+        return redirect()->route('user.profile.edit')
             ->with('success', 'Password changed successfully!');
     }
 }

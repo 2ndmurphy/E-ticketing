@@ -8,13 +8,14 @@ use App\Models\Flight;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class AirlineFlightController extends Controller
 {
     /**
      * Display a listing of the flights for the logged-in airline admin.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
 
@@ -24,10 +25,21 @@ class AirlineFlightController extends Controller
 
         $airline = Airline::where('manage_by_user_id', $user->id)->first();
 
-        $flights = Flight::with(['departureAirport', 'arrivalAirport', 'seatAvailability'])
+        // Read filters from request
+        $search = $request->query('search');
+        $status = $request->query('status');
+
+        $flightsQuery = Flight::with(['departureAirport', 'arrivalAirport', 'seatAvailability'])
+            ->search($search)
             ->where('airline_id', $airline->id)
-            ->orderBy('departure_time', 'asc')
-            ->paginate(10);
+            ->orderBy('departure_time', 'asc');
+
+        if ($status) {
+            $flightsQuery->where('status', $status);
+        }
+
+        // Preserve search/status in pagination links
+        $flights = $flightsQuery->paginate(10)->appends($request->only('search', 'status'));
 
         return view('pages.airline.flights.index', compact('airline', 'flights'));
     }
@@ -66,13 +78,16 @@ class AirlineFlightController extends Controller
             'flight_number' => 'required|string|max:100|unique:flights',
             'departure_airport_id' => 'required|exists:airports,id',
             'arrival_airport_id' => 'required|exists:airports,id|different:departure_airport_id',
-            'departure_time' => 'required|date|after:now',
-            'arrival_time' => 'required|date|after:departure_time',
+            'departure_time' => 'required|date_format:Y-m-d\TH:i|after:now',
+            'arrival_time' => 'required|date_format:Y-m-d\TH:i|after:departure_time',
             'price' => 'required|numeric|min:0',
             'total_seats' => 'required|integer|min:1',
+            'status' => 'required|in:active,cancelled',
         ]);
 
         $validated['airline_id'] = $airline->id;
+        $validated['departure_time'] = \Carbon\Carbon::parse($validated['departure_time']);
+        $validated['arrival_time'] = \Carbon\Carbon::parse($validated['arrival_time']);
         $validated['created_at'] = now();
         $validated['update_at'] = now();
 
@@ -132,19 +147,24 @@ class AirlineFlightController extends Controller
         }
 
         $validated = $request->validate([
-            'flight_number' => 'required|string|max:100|unique:flights',
+            'flight_number' => 'required|string|max:100|unique:flights,flight_number,' . $flight->id,
             'departure_airport_id' => 'required|exists:airports,id',
             'arrival_airport_id' => 'required|exists:airports,id|different:departure_airport_id',
-            'departure_time' => 'required|date|after:now',
-            'arrival_time' => 'required|date|after:departure_time',
+            'departure_time' => 'required|date_format:Y-m-d\TH:i',
+            'arrival_time' => 'required|date_format:Y-m-d\TH:i|after:departure_time',
             'price' => 'required|numeric|min:0',
             'total_seats' => 'required|integer|min:1',
+            'status' => 'required|in:active,cancelled',
         ]);
 
         $validated['airline_id'] = $airline->id;
-        $validated['update_at'] = now();
+        $validated['departure_time'] = Carbon::parse($validated['departure_time']);
+        $validated['arrival_time'] = Carbon::parse($validated['arrival_time']);
 
         $flight->update($validated);
+
+        return redirect()->route('maskapai.flights.index')
+            ->with('success', 'Flight updated successfully!');
     }
 
     /**
@@ -164,7 +184,7 @@ class AirlineFlightController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $flight->update(['status'=> 'cancelled']);
+        $flight->update(['status' => 'cancelled']);
 
         return redirect()->route('maskapai.flights.index')
             ->with('success', 'Flight cancelled successfully!');
