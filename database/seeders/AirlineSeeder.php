@@ -14,25 +14,36 @@ class AirlineSeeder extends Seeder
      */
     public function run(): void
     {
-        $airFly = User::where('email', 'admin@airfly.com')->first();
-        $agraFlight = User::where('email', 'admin@agra.com')->first();
+        $airFlyUser = User::firstOrCreate(
+            ['email' => 'admin@airfly.com'],
+            ['name' => 'AirFly Admin', 'password' => bcrypt('password')]
+        );
 
-        Airline::create([
-            'name' => 'AirFly Indonesia',
-            'code' => 'AFI',
-            'country' => 'Indonesia',
-            'contact_email' => 'contact@airfly.com',
-            'manage_by_user_id' => $airFly->id,
-            'is_active' => true,
-        ]);
+        $agraUser = User::firstOrCreate(
+            ['email' => 'admin@agra.com'],
+            ['name' => 'Agra Admin', 'password' => bcrypt('password')]
+        );
 
-        Airline::create([
-            'name' => 'AgraFlight Indonesia',
-            'code' => 'AGF',
-            'country' => 'Indonesia',
-            'contact_email' => 'contact@agra.com',
-            'manage_by_user_id' => $agraFlight->id,
-            'is_active' => true,
-        ]);
+        Airline::firstOrCreate(
+            ['code' => 'AFI'],
+            [
+                'name' => 'AirFly Indonesia',
+                'country' => 'Indonesia',
+                'contact_email' => 'contact@airfly.com',
+                'manage_by_user_id' => $airFlyUser->id,
+                'is_active' => true,
+            ]
+        );
+
+        Airline::firstOrCreate(
+            ['code' => 'AGF'],
+            [
+                'name' => 'AgraFlight Indonesia',
+                'country' => 'Indonesia',
+                'contact_email' => 'contact@agra.com',
+                'manage_by_user_id' => $agraUser->id,
+                'is_active' => true,
+            ]
+        );
     }
 }

@@ -65,7 +65,7 @@ class AirlineBookingController extends Controller
     /**
      * Update booking status (confirm, cancel, complete).
      */
-    public function updateStatus(Request $request, Booking $booking)
+    public function update(Request $request, Booking $booking)
     {
         $user = Auth::user();
         $airline = Airline::where('manage_by_user_id', $user->id)->firstOrFail();

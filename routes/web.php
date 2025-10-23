@@ -1,11 +1,22 @@
 <?php
 
-use App\Http\Controllers\Airline\{AirlineFlightController, AirlineBookingController, AirlineProfileController, AirlinePassangerController};
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\User\{UserFlightController, UserBookingController, UserProfileController};
-use App\Http\Controllers\User\AdminController;
-
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Airline\{
+    AirlineFlightController,
+    AirlineBookingController,
+    AirlineProfileController,
+    AirlinePassangerController
+};
+use App\Http\Controllers\Airline\AirlineDashboardController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\User\{
+    UserDashboardController,
+    UserFlightController,
+    UserBookingController,
+    UserProfileController
+};
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,18 +35,19 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth'])->group(function () {
     // Admin Only
     Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
-        Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     });
 
     // Maskapai Only
     Route::middleware(['role:maskapai'])->prefix('maskapai')->name('maskapai.')->group(function () {
-        // Route::get('/dashboard', [MaskapaiController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [AirlineDashboardController::class, 'index'])->name('dashboard');
 
         Route::resource('flights', AirlineFlightController::class);
+        Route::resource('bookings', AirlineBookingController::class);
 
-        Route::get('/bookings', [AirlineBookingController::class, 'index'])->name('bookings.index');
-        Route::get('/bookings/{booking}', [AirlineBookingController::class, 'show'])->name('bookings.show');
-        Route::put('/bookings/{booking}/update-status', [AirlineBookingController::class, 'updateStatus'])->name('bookings.update-status');
+        // Route::get('/bookings', [AirlineBookingController::class, 'index'])->name('bookings.index');
+        // Route::get('/bookings/{booking}', [AirlineBookingController::class, 'show'])->name('bookings.show');
+        // Route::put('/bookings/{booking}/update-status', [AirlineBookingController::class, 'update'])->name('bookings.update-status');
 
         Route::get('/passengers', [AirlinePassangerController::class, 'index'])->name('passengers.index');
         Route::get('/passengers/export/{flightId}', [AirlinePassangerController::class, 'export'])->name('passengers.export');
@@ -47,7 +59,7 @@ Route::middleware(['auth'])->group(function () {
 
     // User Only
     Route::middleware(['role:user'])->prefix('user')->name('user.')->group(function () {
-        // Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
 
         Route::get('/flights', [UserFlightController::class, 'index'])->name('flights.index');
         Route::get('/flights/{id}', [UserFlightController::class, 'show'])->name('flights.show');

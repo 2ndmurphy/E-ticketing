@@ -30,8 +30,12 @@ class UserFlightController extends Controller
             $query->whereDate('departure_time', $request->date);
         }
 
+        // Kalau search filters (from+to) tersedia, biarkan tetap ada (paginate 10).
+        // Jika tidak tunjukkan  5 penerbangan aktif pertama menggunakan paginate(5).
         if ($request->filled(['from', 'to'])) {
             $flights = $query->orderBy('departure_time')->paginate(10);
+        } else {
+            $flights = $query->orderBy('departure_time')->paginate(5);
         }
 
         return view('pages.user.flights.index', compact('airports', 'flights'));

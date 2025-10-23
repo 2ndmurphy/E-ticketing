@@ -41,7 +41,7 @@
                             <p><span class="font-medium">Airline Code:</span> {{ $flight->airline->code ?? '-' }}</p>
                         </div>
                         <div>
-                            <p><span class="font-medium">Price:</span> Rp{{ number_format($flight->price, 0, ',', '.') }}</p>
+                            <p><span class="font-medium">Price:</span> Rp {{ number_format($flight->price, 0, ',', '.') }}</p>
                             <p><span class="font-medium">Total Seats:</span> {{ $flight->total_seats }}</p>
                             <p><span class="font-medium">Available Seats:</span> {{ $availableSeats ?? '-' }}</p>
                         </div>

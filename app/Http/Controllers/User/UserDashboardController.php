@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\User;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
-class MaskapaiController extends Controller
+class UserDashboardController extends Controller
 {
     public function index()
     {
-        return view('pages.airline.dashboard');
+        return view('pages.user.dashboard');
     }
 }

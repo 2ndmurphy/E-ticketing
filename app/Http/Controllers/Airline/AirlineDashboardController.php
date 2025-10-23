@@ -6,14 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Airline;
 use Illuminate\Http\Request;
 
-class AirlineController extends Controller
+class AirlineDashboardController extends Controller
 {
     /**
      * Display a listing of the airlines.
      */
     public function index()
     {
-        //
+        return view('pages.airline.dashboard');
     }
 
     /**

@@ -29,7 +29,7 @@
                             <p><span class="font-medium">Arrival Time:</span> {{ $flight->arrival_time->format('Y-m-d H:i') }}</p>
                         </div>
                         <div>
-                            <p><span class="font-medium">Price:</span> Rp{{ number_format($flight->price, 0, ',', '.') }}</p>
+                            <p><span class="font-medium">Price:</span> Rp {{ number_format($flight->price, 0, ',', '.') }}</p>
                             <p><span class="font-medium">Total Seats:</span> {{ $flight->total_seats }}</p>
                             <p><span class="font-medium">Available Seats:</span> {{ $availableSeats ?? '-' }}</p>
                             <p><span class="font-medium">Status:</span> 

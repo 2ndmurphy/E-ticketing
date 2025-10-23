@@ -106,7 +106,7 @@
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <h3 class="text-lg font-semibold mb-4">Update Booking Status</h3>
 
-                    <form method="POST" action="{{ route('maskapai.bookings.update-status', $booking->id) }}" class="space-y-4">
+                    <form method="POST" action="{{ route('maskapai.bookings.update', $booking->id) }}" class="space-y-4">
                         @csrf
                         @method('PUT')
 

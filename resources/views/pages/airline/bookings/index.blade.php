@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                Booking Management
+                {{ __('Manajemen Booking') }}
             </h2>
         </div>
     </x-slot>
@@ -38,19 +38,19 @@
                 </thead>
                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                     @forelse ($bookings as $booking)
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-900 transition">
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-900 transition text-gray-700 dark:text-gray-400">
                             <td class="px-4 py-3 font-medium">
                                 {{ $booking->booking_code }}
                             </td>
                             <td class="px-4 py-3">
                                 {{ $booking->flight->departureAirport->code }} → {{ $booking->flight->arrivalAirport->code }}
-                                <div class="text-xs text-gray-500 dark:text-gray-400">
-                                    {{-- {{ $booking->flight->departure_time->format('Y-m-d H:i') }} --}}
+                                <div class="text-xs text-gray-500 dark:text-gray-600">
+                                    {{ $booking->flight->departure_time->format('Y-m-d H:i') }}
                                 </div>
                             </td>
                             <td class="px-4 py-3">
                                 @foreach ($booking->passengers as $p)
-                                    <div class="text-sm text-gray-700 dark:text-gray-300">{{ $p->name }}</div>
+                                    <div class="text-sm">{{ $p->name }}</div>
                                 @endforeach
                             </td>
                             <td class="px-4 py-3">{{ $booking->number_of_seats }}</td>

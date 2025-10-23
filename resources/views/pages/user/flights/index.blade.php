@@ -71,7 +71,7 @@
                             <div class="p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
                                 <div>
                                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
-                                        {{ $flight->airline->name }} — {{ $flight->flight_number }}
+                                        {{ $flight->airline->name }} - {{ $flight->flight_number }}
                                     </h3>
                                     <p class="text-sm text-gray-500 dark:text-gray-400">
                                         {{ $flight->departureAirport->city }} ({{ $flight->departureAirport->code }})
@@ -86,7 +86,7 @@
 
                                 <div class="text-right">
                                     <p class="text-lg font-bold text-gray-800 dark:text-gray-100">
-                                        Rp{{ number_format($flight->price, 0, ',', '.') }}
+                                        Rp {{ number_format($flight->price, 0, ',', '.') }}
                                     </p>
                                     <p class="text-sm text-gray-500 dark:text-gray-400">
                                         Seats: {{ $flight->seatAvailability->available_seats ?? $flight->total_seats }}

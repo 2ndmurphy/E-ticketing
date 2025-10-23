@@ -16,14 +16,16 @@ class FlightSeeder extends Seeder
      */
     public function run(): void
     {
-        $airline = Airline::first();
+        $airFly = Airline::firstOrCreate(['code' => 'AFI'], ['name' => 'AirFly Indonesia']);
+        $agraFlight = Airline::firstOrCreate(['code' => 'AGF'], ['name' => 'AgraFlight Indonesia']);
+
         $cgk = Airport::where('code', 'CGK')->first();
         $dps = Airport::where('code', 'DPS')->first();
         $sub = Airport::where('code', 'SUB')->first();
 
         $flights = [
             [
-                'airline_id' => $airline->id,
+                'airline_id' => $airFly->id,
                 'flight_number' => 'AF101',
                 'departure_airport_id' => $cgk->id,
                 'arrival_airport_id' => $dps->id,
@@ -34,7 +36,7 @@ class FlightSeeder extends Seeder
                 'status' => 'active',
             ],
             [
-                'airline_id' => $airline->id,
+                'airline_id' => $airFly->id,
                 'flight_number' => 'AF202',
                 'departure_airport_id' => $dps->id,
                 'arrival_airport_id' => $sub->id,
@@ -45,7 +47,7 @@ class FlightSeeder extends Seeder
                 'status' => 'active',
             ],
             [
-                'airline_id' => $airline->id,
+                'airline_id' => $agraFlight->id,
                 'flight_number' => 'AG101',
                 'departure_airport_id' => $sub->id,
                 'arrival_airport_id' => $cgk->id,
