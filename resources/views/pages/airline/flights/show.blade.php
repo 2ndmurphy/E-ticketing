@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Flight Details') }}
+                {{ __('Detail Penerbangan') }}
             </h2>
             <a href="{{ route('maskapai.flights.index') }}" 
                class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
@@ -31,7 +31,7 @@
                         <div>
                             <p><span class="font-medium">Price:</span> Rp{{ number_format($flight->price, 0, ',', '.') }}</p>
                             <p><span class="font-medium">Total Seats:</span> {{ $flight->total_seats }}</p>
-                            <p><span class="font-medium">Available Seats:</span> {{ $flight->seatAvailability->available_seats ?? '-' }}</p>
+                            <p><span class="font-medium">Available Seats:</span> {{ $availableSeats ?? '-' }}</p>
                             <p><span class="font-medium">Status:</span> 
                                 <span class="px-2 py-1 rounded-full text-xs font-semibold
                                     {{ $flight->status === 'active' 

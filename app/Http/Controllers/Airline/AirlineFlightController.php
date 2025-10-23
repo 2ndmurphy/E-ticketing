@@ -25,7 +25,7 @@ class AirlineFlightController extends Controller
 
         $airline = Airline::where('manage_by_user_id', $user->id)->first();
 
-        // Read filters from request
+        // Read filters dari request
         $search = $request->query('search');
         $status = $request->query('status');
 
@@ -86,8 +86,8 @@ class AirlineFlightController extends Controller
         ]);
 
         $validated['airline_id'] = $airline->id;
-        $validated['departure_time'] = \Carbon\Carbon::parse($validated['departure_time']);
-        $validated['arrival_time'] = \Carbon\Carbon::parse($validated['arrival_time']);
+        $validated['departure_time'] = Carbon::parse($validated['departure_time']);
+        $validated['arrival_time'] = Carbon::parse($validated['arrival_time']);
         $validated['created_at'] = now();
         $validated['update_at'] = now();
 
@@ -102,9 +102,9 @@ class AirlineFlightController extends Controller
      */
     public function show(Flight $flight)
     {
-        $flight->load('departureAirport', 'arrivalAirport', 'seatAvailability');
-
-        return view('pages.airline.flights.show', compact('flight'));
+        $flight->load('departureAirport', 'arrivalAirport');
+        $availableSeats = $flight->available_seats;
+        return view('pages.airline.flights.show', compact('flight', 'availableSeats'));
     }
 
     /**

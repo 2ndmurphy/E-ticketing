@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Airline Admin
+        // User Admin
         User::create([
             'name' => 'Admin',
             'username' => 'admin123',
@@ -23,15 +23,24 @@ class UserSeeder extends Seeder
             'role' => 'admin',
         ]);
 
+        // User Maskapai
         User::create([
-            'name' => 'Airline Admin',
-            'username' => 'admin_maskapai',
+            'name' => 'AirFly Condor',
+            'username' => 'airfly123',
             'email' => 'admin@airfly.com',
             'password' => Hash::make('password'),
             'role' => 'maskapai',
         ]);
 
-        // Customer
+        User::create([
+            'name' => 'Agra Flight',
+            'username' => 'agraflight123',
+            'email' => 'admin@agra.com',
+            'password' => Hash::make('password'),
+            'role' => 'maskapai',
+        ]);
+
+        // User Customer
         User::create([
             'name' => 'John Doe',
             'username' => 'johndoe123',

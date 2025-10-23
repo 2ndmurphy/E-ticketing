@@ -143,6 +143,8 @@ class UserBookingController extends Controller
                 ]
             );
 
+            // $booking->
+
             $booking->histories()->create([
                 'status' => 'paid',
                 'notes' => 'Payment completed by user.'

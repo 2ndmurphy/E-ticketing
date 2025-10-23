@@ -25,13 +25,13 @@ class BookingSeeder extends Seeder
             'flight_id' => $flight->id,
             'number_of_seats' => 2,
             'total_price' => $flight->price * 2,
-            'payment_status' => 'unpaid',
+            'payment_status' => 'paid',
             'booking_status' => 'pending',
             'paid_at' => now(),
             'booking_date' => now(),
         ]);
 
-        // Link for passengers seeder
+        // Sambung key(id) ke config booking passengers seeder
         config(['test.booking_id' => $booking->id]);
     }
 }

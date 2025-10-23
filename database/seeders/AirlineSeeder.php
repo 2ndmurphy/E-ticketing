@@ -14,14 +14,24 @@ class AirlineSeeder extends Seeder
      */
     public function run(): void
     {
-        $maskapaiAdmin = User::where('email', 'admin@airfly.com')->first();
+        $airFly = User::where('email', 'admin@airfly.com')->first();
+        $agraFlight = User::where('email', 'admin@agra.com')->first();
 
         Airline::create([
             'name' => 'AirFly Indonesia',
             'code' => 'AFI',
             'country' => 'Indonesia',
             'contact_email' => 'contact@airfly.com',
-            'manage_by_user_id' => $maskapaiAdmin->id,
+            'manage_by_user_id' => $airFly->id,
+            'is_active' => true,
+        ]);
+
+        Airline::create([
+            'name' => 'AgraFlight Indonesia',
+            'code' => 'AGF',
+            'country' => 'Indonesia',
+            'contact_email' => 'contact@agra.com',
+            'manage_by_user_id' => $agraFlight->id,
             'is_active' => true,
         ]);
     }
