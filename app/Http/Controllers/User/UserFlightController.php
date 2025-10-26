@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
 use Illuminate\Http\Request;
 use App\Models\Flight;
 use App\Models\Airport;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class UserFlightController extends Controller
@@ -51,6 +53,11 @@ class UserFlightController extends Controller
             ->findOrFail($id);
         $availableSeats = $flight->available_seats;
 
-        return view('pages.user.flights.show', compact('flight', 'availableSeats'));
+        // Mencegah user dari membuat booking lain sementara mereka memiliki booking yang tertunda.
+        $hasPending = Booking::where('user_id', Auth::id())
+            ->where('booking_status', 'pending')
+            ->exists();
+
+        return view('pages.user.flights.show', compact('flight', 'availableSeats', 'hasPending'));
     }
 }

@@ -51,10 +51,20 @@
 
             <!-- Booking CTA -->
             <div class="flex justify-end">
-                <a href="{{ route('user.bookings.create', $flight->id) }}"
-                   class="inline-flex items-center px-6 py-3 bg-blue-600 text-white text-sm font-semibold rounded-md shadow hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">
-                    Proceed to Booking
-                </a>
+                @if ($hasPending)
+                    <button
+                        type="button"
+                        disabled
+                        class="inline-flex items-center px-6 py-3 bg-blue-600 text-white text-sm font-semibold rounded-md shadow opacity-50 cursor-not-allowed"
+                        title="Anda memiliki booking pending. Selesaikan atau batalkan terlebih dahulu.">
+                        Proceed to Booking
+                    </button>
+                @else
+                    <a href="{{ route('user.bookings.create', $flight->id) }}"
+                       class="inline-flex items-center px-6 py-3 bg-blue-600 text-white text-sm font-semibold rounded-md shadow hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">
+                        Proceed to Booking
+                    </a>
+                @endif
             </div>
         </div>
     </div>

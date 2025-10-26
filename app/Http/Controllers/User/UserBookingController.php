@@ -57,6 +57,16 @@ class UserBookingController extends Controller
 
         // Pastikan kita ambil flight berdasarkan flight_id (bukan memanggil find pada instance route-bound)
         $flight = Flight::findOrFail($validated['flight_id']);
+
+        // Mencegah user dari membuat booking lain sementara mereka memiliki booking yang tertunda.
+        $hasPending = Booking::where('user_id', Auth::id())
+            ->where('booking_status', 'pending')
+            ->exists();
+
+        if ($hasPending) {
+            return back()->with('error', 'Anda sudah memiliki booking yang tertunda. Silakan selesaikan pembayaran atau batalkan sebelum membuat booking baru.');
+        }
+
         $requestedSeats = count($validated['passengers']);
         $availableSeats = $flight->available_seats;
 
@@ -143,14 +153,12 @@ class UserBookingController extends Controller
                 ]
             );
 
-            // $booking->
-
             $booking->histories()->create([
                 'status' => 'paid',
                 'notes' => 'Payment completed by user.'
             ]);
 
-            return back()->with('success', 'Pembayaran berhasil! Booking kamu sudah dikonfirmasi.');
+            return back()->with('success', 'Pembayaran berhasil! Tunggu konfirmasi dari maskapai.');
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal memproses pembayaran: ' . $e->getMessage());
         }
