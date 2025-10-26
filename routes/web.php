@@ -2,7 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\{
+    AdminDashboardController,
+    UserController,
+    AirlineController,
+    AirportController
+};
 use App\Http\Controllers\Airline\{
     AirlineFlightController,
     AirlineBookingController,
@@ -36,6 +41,10 @@ Route::middleware(['auth'])->group(function () {
     // Admin Only
     Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+        Route::resource('users', UserController::class);
+        Route::resource('airlines', AirlineController::class);
+        Route::resource('airports', AirportController::class);
     });
 
     // Maskapai Only
@@ -52,7 +61,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/passengers', [AirlinePassangerController::class, 'index'])->name('passengers.index');
         Route::get('/passengers/export/{flightId}', [AirlinePassangerController::class, 'export'])->name('passengers.export');
 
-        // Route::get('/profile', [AirlineProfileController::class, 'index'])->name('profile.index');
         Route::get('/profile/edit', [AirlineProfileController::class, 'edit'])->name('profile.edit');
         Route::put('/profile', [AirlineProfileController::class, 'update'])->name('profile.update');
     });

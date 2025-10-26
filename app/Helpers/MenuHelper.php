@@ -18,6 +18,26 @@ class MenuHelper
                     'route' => 'admin.dashboard',
                     'icon' => 'fa fa-dashboard'
                 ],
+                [
+                    'label' => 'Users',
+                    'route' => 'admin.users.index',
+                    'icon' => 'fa fa-dashboard'
+                ],
+                [
+                    'label' => 'Airlines',
+                    'route' => 'admin.airlines.index',
+                    'icon' => 'fa fa-dashboard'
+                ],
+                [
+                    'label' => 'Airports',
+                    'route' => 'admin.airports.index',
+                    'icon' => 'fa fa-dashboard'
+                ],
+                // [
+                //     'label' => 'Profiles',
+                //     'route' => 'admin.profiles.index',
+                //     'icon' => 'fa fa-dashboard'
+                // ],
             ],
             'maskapai' => [
                 // [

@@ -13,7 +13,9 @@ class AirportController extends Controller
      */
     public function index()
     {
-        //
+        $airports = Airport::with(['departures', 'arrivals'])->get();
+
+        return view('pages.admin.airports.index', compact('airports'));
     }
 
     /**
