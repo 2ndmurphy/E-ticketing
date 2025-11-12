@@ -11,7 +11,7 @@
         </div>
     </x-slot>
 
-    <div class="py-8">
+    <div class="p-12">
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
             <!-- Flight Summary -->

@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="p-8">
+    <div class="p-12">
         <a href="{{ route('maskapai.flights.create') }}"
             class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-md shadow hover:bg-blue-700 mb-4">
             + Add New Flight
