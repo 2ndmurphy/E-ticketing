@@ -15,7 +15,7 @@ class MenuHelper
             'admin' => [
                 [
                     'label' => 'Dashboard',
-                    'route' => 'admin.dashboard',
+                    'route' => 'admin.dashboard.index',
                     'icon' => 'fa fa-dashboard'
                 ],
                 [
@@ -40,11 +40,11 @@ class MenuHelper
                 // ],
             ],
             'maskapai' => [
-                // [
-                //     'label' => 'Dashboard',
-                //     'route' => 'maskapai.dashboard',
-                //     'icon' => 'fa fa-dashboard'
-                // ],
+                [
+                    'label' => 'Dashboard',
+                    'route' => 'maskapai.dashboard.index',
+                    'icon' => 'fa fa-dashboard'
+                ],
                 [
                     'label' => 'Penerbangan',
                     'route' => 'maskapai.flights.index',
@@ -68,6 +68,11 @@ class MenuHelper
             ],
             'user' => [
                 [
+                    'label' => 'Dashboard',
+                    'route' => 'user.dashboard.index',
+                    'icon' => 'fa fa-dashboard'
+                ],
+                [
                     'label' => 'Penerbangan',
                     'route' => 'user.flights.index',
                     'icon' => 'fa fa-plane'
@@ -89,20 +94,29 @@ class MenuHelper
         return $menus;
     }
 
-    public static function findProfileMenu(string $role): ?array
+    public static function findProfileMenu(string|array $roleOrMenus): ?array
     {
-        $menus = static::getMenuByRole($role);
+        // Accept either a role name (string) or an already-resolved menus array.
+        // This avoids double lookups when the caller already has the menus.
+        $menus = is_string($roleOrMenus) ? static::getMenuByRole($roleOrMenus) : $roleOrMenus;
+
+        if (!is_array($menus)) {
+            return null;
+        }
 
         foreach ($menus as $item) {
-            // cek berdasarkan nama route yang mengandung 'profile'
-            if (!empty($item['route']) && str_contains($item['route'], 'profile')) {
+            // check based on route name containing 'profile' (defensive)
+            $route = $item['route'] ?? '';
+            if ($route !== '' && str_contains($route, 'profile')) {
                 return $item;
             }
 
-            // kalau punya children, cari di dalamnya juga
-            if (!empty($item['children'])) {
-                foreach ($item['children'] as $child) {
-                    if (!empty($child['route']) && str_contains($child['route'], 'profile')) {
+            // if it has children, search inside them as well (defensive)
+            $children = $item['children'] ?? [];
+            if (!empty($children) && is_array($children)) {
+                foreach ($children as $child) {
+                    $childRoute = $child['route'] ?? '';
+                    if ($childRoute !== '' && str_contains($childRoute, 'profile')) {
                         return $child;
                     }
                 }
@@ -124,8 +138,9 @@ class MenuHelper
             return true;
         }
 
-        if (!empty($item['children'])) {
-            foreach ($item['children'] as $child) {
+        $children = $item['children'] ?? [];
+        if (!empty($children) && is_array($children)) {
+            foreach ($children as $child) {
                 if (static::isActive($child, $currentRoute)) {
                     return true;
                 }

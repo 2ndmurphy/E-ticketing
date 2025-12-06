@@ -9,7 +9,7 @@ use App\Models\User;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 
-class AdminDashboardController extends Controller
+class DashboardController extends Controller
 {
     public function index()
     {
